@@ -1,0 +1,100 @@
+body {
+	background-color: #282828;
+	color: white;
+	display: flex;
+	background-color: black;
+	font-family: 'Raleway', sans-serif;
+	padding: 0px;
+	margin: 0px;
+	overflow: hidden;
+}
+
+a:link {
+	color: white;
+}
+
+a:active {
+	color: blue;
+}
+
+a:visited {
+	color: white;
+}
+
+.main {
+	display: flex;
+	width: 100%;
+	height: 100%;
+}
+
+.fas fa-search {
+	color: black;
+}
+
+input {
+	padding: 5px;
+	height: 20px;
+	margin: 5px;
+	border-radius: 15px;
+	border: 0;
+	margin-left: 10px;
+	margin-top: 20px;
+}
+
+#sidebar {
+	width: 20vw;
+	color: white;
+	margin-right: 20px;
+	background-color: #4286f4 ;	
+	height: 100vh;
+
+}
+
+#sidebar h1 {
+	margin-left: 5px;
+}
+
+#tblContainer {
+	height: 100vh;
+	overflow-y: scroll;
+}
+
+#tblData {
+	margin-top: 40px;
+	background-color: #282828;	
+	width: 70vw;
+	
+}
+
+
+
+#tblData th {
+}
+
+#table {
+	margin-top:40px;
+}
+
+#controls {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width:100%; 
+	background-color: red;
+}
+
+body::-webkit-scrollbar {
+    width: 1em;
+}
+ 
+body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+ 
+body::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
+
+

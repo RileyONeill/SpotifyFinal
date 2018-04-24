@@ -1,0 +1,207 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Spotify</title>
+<link href="style.css" rel="stylesheet" type="text/css"  />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" 
+integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet"> 
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+//checks that page has fully loaded
+$(document).ready(function(){
+	//defines search feature when search icon is clicked
+	$("#btnSearch").click(function(){
+		var searchTerm = $("#txtSearch").val();
+		var searchBy = $("input[name=radio]:checked").val();
+		
+		search(searchBy, searchTerm);
+	});
+	//automatically presses search button when text is entered into search box
+	$("#txtSearch").keyup(function(){
+		var searchTerm = $("#txtSearch").val();
+		var searchBy = $("input[name=radio]:checked").val();
+		if(searchTerm.length >= 3){
+			console.log(searchTerm);
+			search(searchBy, searchTerm);
+		}
+		
+		
+	});
+	
+	
+});
+//refers to servlet which searches database for info
+//key is defined by which radio button is clicked
+//val is defined by text in search box
+//@param key
+//@param val
+function search(key, val){
+			
+	var searchUrl = "api/get_songs_plus?" + key + "=" + val;
+	// console.log(searchUrl);
+	$.get(searchUrl, function(data){
+		console.log(data);
+		searchResult = data;
+		if(key=="title"){
+			songSearchResults(data);
+			console.log("Search by title");
+		}
+		if(key=="artist"){
+			artistSearchResults(data);
+			console.log("Search by artist");
+			}
+		if(key=="album"){
+			albumSearchResults(data);
+			console.log("Search by album");
+		}
+	});
+	
+}
+//if song radio button is selected
+//creates table populated by info from database
+//@param data
+function songSearchResults(data){
+	var tbl = $("#tblData");
+	tbl.empty();
+	tbl.append("<tr><th>Title</th><th>Artist</th><th>Album</th><th>Length</th></tr>")
+	for(var i = 0; i < data.length; i++){
+		var audio = "<audio controls><source src='audio/rimshot.mp3' type='audio/mpeg'></audio>"
+		var tr = $("<tr></tr>");
+		var td = $("<td></td>");
+		
+		td.html(data[i].title);
+		tr.append(td);
+		
+		//If the associated artist has data in band_name field, that will show up
+		if(!data[i].band_name == ""){
+			td = $("<td></td>");
+			td.html(data[i].band_name)
+			tr.append(td);
+		}
+		//if band_name field is empty in favor of the first_name/last_name fields, that will appear instead.
+		else if(data[i].band_name == ""){
+			td = $("<td></td>");
+			td.html(data[i].first_name + " " + data[i].last_name)
+			tr.append(td);
+		}
+		
+		td = $("<td></td>");
+		td.html(data[i].album_title)
+		tr.append(td);
+		
+		
+		td = $("<td></td>");
+		td.html(data[i].length)
+		tr.append(td);
+		
+		td = $("<td></td>");
+		td.html(audio)
+		tr.append(td);
+		
+		tbl.append(tr);
+	}
+}
+//if artist radio button is selected
+//@param data
+function artistSearchResults(data){
+	var tbl = $("#tblData");
+	tbl.empty();
+	tbl.append("<tr> <th>Artist</th> <th>Name<th>Bio</th> </tr>")
+	for(var i = 0; i < data.length; i++){
+		var tr = $("<tr></tr>");
+		var td = $("<td></td>");
+		td.html(data[i].band_name)
+		tr.append(td);
+		
+		td = $("<td></td>");
+		td.html(data[i].first_name + " " + data[i].last_name)
+		tr.append(td);
+
+		
+		td = $("<td></td>");
+		td.html(data[i].bio)
+		tr.append(td);
+		
+		tbl.append(tr);
+	}
+}
+//if album radio button is selected
+//@param data
+function albumSearchResults(data){
+	var tbl = $("#tblData");
+	tbl.empty();
+	tbl.append("<tr> <th>Title</th> <th>Rating</th> <th>Artist</th> <th>Tracks</th> <th>Label</th> <th>Length</th>  </tr>")
+	for(var i = 0; i < data.length; i++){
+		var tr = $("<tr></tr>");
+		var td = $("<td></td>");
+		td.html(data[i].title)
+		tr.append(td);
+		
+		td = $("<td></td>");
+		td.html(data[i].PMRC_rating)
+		tr.append(td);
+		
+		if(!data[i].band_name == ""){
+			td = $("<td></td>");
+			td.html(data[i].band_name)
+			tr.append(td);
+		}
+		else if(data[i].band_name == ""){
+			td = $("<td></td>");
+			td.html(data[i].first_name + " " + data[i].last_name)
+			tr.append(td);
+		}
+		
+		td = $("<td></td>");
+		td.html(data[i].number_of_tracks)
+		tr.append(td);
+		
+		td = $("<td></td>");
+		td.html(data[i].recording_company_name)
+		tr.append(td);
+		
+		td = $("<td></td>");
+		td.html(data[i].length)
+		tr.append(td);
+		
+		tbl.append(tr);
+	}
+}
+
+
+
+</script>
+
+
+
+</head>
+<body>
+<div id=sidebar>
+
+	<h1>Spotify*</h1>
+	
+	<br />
+	<input type="text" id="txtSearch" placeholder="Search..." value="" /> <a href="#"><i class="fas fa-search" type="button" id="btnSearch" value="Search"></i></a>
+	<br />
+	
+	<input type="radio" name="radio" value="title" checked>Songs<br><br>
+
+	<input type="radio" name="radio" value="artist">Artists<br><br>
+
+	<input type="radio" name="radio" value="album">Albums
+</div>
+
+<section id="main">
+<div id="tblContainer">
+<table id="tblData" border="1" cellspacing="0" cellpadding="4">
+
+</table>
+</div>
+</section>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="ISO-8859-1">
+<link href="style.css" rel="stylesheet" type="text/css"  />
+<title>Spotify</title>
+<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+$(document).ready(function(){
+	
+	$("#btnSearch").click(function(){
+		var searchTerm = $("#txtSearch").val();
+		var searchBy = $("input[name='radio']:checked").val();
+		
+		console.log(searchTerm);
+		console.log(searchBy);
+		
+		search(searchBy, searchTerm);
+	});
+});
+
+function search(key, val){
+	var searchUrl = "api/get_songs_plus?" + key + "=" + val;
+	// console.log(searchUrl);
+	$.get(searchUrl, function(data){
+		console.log(data);
+		songSearchResults(data);
+	});
+}
+
+function songSearchResults(data){
+	var tbl = $("#dataTbl");
+	tbl.empty();
+	for(var i = 0; i < data.length; i++){
+		var tr = $("<tr></tr>");
+		var td = $("<td></td>");
+		td.html(data[i].title);
+		tr.append(td);
+		
+		td = $("<td></td>");
+		td.html(data[i].release_date)
+		tr.append(td);
+		
+		td = $("<td></td>");
+		td.html(data[i].length)
+		tr.append(td);
+		
+		tbl.append(tr);
+	}
+}
+</script>
+</head>
+
+<body>
+
+
+
+<div id="sidebar">
+
+<h1>Spotify</h1>
+
+
+<input type="text" placeholder="Search..." id="txtSearch">
+
+<input type="button" id="btnSearch" value="Search">
+
+<input type="radio" name="radio" value="Songs">Songs<br><br>
+
+<input type="radio" name="radio" value="Artists">Artists<br><br>
+
+<input type="radio" name="radio" value="Albums">Albums
+
+</div>
+
+
+<section id="table">
+
+<div>
+<table id="dataTbl" border="1" cellspacing="0" cellpadding="4">
+
+</table>
+</div>
+</section>
+
+
+
+
+</body>
+
+</html>
